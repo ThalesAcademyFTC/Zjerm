@@ -126,7 +126,6 @@ public class Jacon_Bacon extends OpMode
             leftDrive.setPower(1);
             rightDrive.setPower(1);
         }
-        if(gamepad1)
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
