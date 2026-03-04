@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -50,14 +52,16 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
-@Disabled
+@TeleOp(name="Jacon_Bacon", group="Iterative OpMode")
 public class Jacon_Bacon extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private TouchSensor lockSensor;
+    private Servo lockServo;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -71,6 +75,8 @@ public class Jacon_Bacon extends OpMode
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        lockSensor = hardwareMap.get(TouchSensor.class, "lockSensor");
+        lockServo = hardwareMap.get(Servo.class, "lockServo");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -122,9 +128,32 @@ public class Jacon_Bacon extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        if(gamepad1.a) {
+
+        if(gamepad1.left_stick_x<0.0) {
+            leftDrive.setPower(-1);
+            rightDrive.setPower(1);
+        }
+        if(gamepad1.left_stick_x>0.0) {
+            leftDrive.setPower(1);
+            rightDrive.setPower(-1);
+        }
+        else if(gamepad1.b) {
+            leftDrive.setPower(-1);
+            rightDrive.setPower(-1);
+        }
+        else if(gamepad1.a) {
             leftDrive.setPower(1);
             rightDrive.setPower(1);
+        }
+        else{
+            leftDrive.setPower(0);
+            rightDrive.setPower(0);
+        }
+        if(lockSensor.isPressed()){
+            lockServo.setPosition(1);
+        }
+        if(gamepad1.right_trigger>0.2){
+            lockServo.setPosition(-1);
         }
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
