@@ -53,8 +53,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Jacon_Bacon", group="Iterative OpMode")
-public class Jacon_Bacon extends OpMode
-{
+public class Jacon_Bacon extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
@@ -73,7 +72,7 @@ public class Jacon_Bacon extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         lockSensor = hardwareMap.get(TouchSensor.class, "lockSensor");
         lockServo = hardwareMap.get(Servo.class, "lockServo");
@@ -117,10 +116,10 @@ public class Jacon_Bacon extends OpMode
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double drive =  gamepad1.left_stick_y;
-        double turn  = -gamepad1.right_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        double drive = gamepad1.left_stick_y;
+        double turn = -gamepad1.right_stick_x;
+        leftPower = Range.clip(drive + turn, -1.0, 1.0);
+        rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -129,42 +128,38 @@ public class Jacon_Bacon extends OpMode
 
         // Send calculated power to wheels
 
-        if(gamepad1.left_stick_x<0.0) {
+        if (gamepad1.left_stick_x < 0.0) {
             leftDrive.setPower(-1);
             rightDrive.setPower(1);
-        }
-        if(gamepad1.left_stick_x>0.0) {
-            leftDrive.setPower(1);
-            rightDrive.setPower(-1);
-        }
-        else if(gamepad1.b) {
-            leftDrive.setPower(-1);
-            rightDrive.setPower(-1);
-        }
-        else if(gamepad1.a) {
-            leftDrive.setPower(1);
-            rightDrive.setPower(1);
-        }
-        else{
-            leftDrive.setPower(0);
-            rightDrive.setPower(0);
-        }
-        if(lockSensor.isPressed()){
-            lockServo.setPosition(1);
-        }
-        if(gamepad1.right_trigger>0.2){
-            lockServo.setPosition(-1);
-        }
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-    }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
+            if (gamepad1.left_stick_x > 0.0) {
+                leftDrive.setPower(1);
+                rightDrive.setPower(-1);
+            } else if (gamepad1.b) {
+                leftDrive.setPower(-1);
+                rightDrive.setPower(-1);
+            } else if (gamepad1.a) {
+                leftDrive.setPower(1);
+                rightDrive.setPower(1);
+            } else {
+                leftDrive.setPower(0);
+                rightDrive.setPower(0);
+            }
+            if (lockSensor.isPressed()) {
+                lockServo.setPosition(1);
+            }
+            if (gamepad1.right_trigger > 0.2) {
+                lockServo.setPosition(-1);
+            }
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        }
 
+        /*
+         * Code to run ONCE after the driver hits STOP
+         */
+
+
+    }
 }
